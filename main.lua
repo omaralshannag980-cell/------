@@ -14,6 +14,7 @@ local COLORS = {
     blue = Color3.fromRGB(70, 150, 255),
     button = Color3.fromRGB(60, 60, 75),
     buttonHover = Color3.fromRGB(80, 80, 100),
+    registered = Color3.fromRGB(40, 120, 40),
     accent = Color3.fromRGB(0, 170, 255)
 }
 
@@ -62,8 +63,8 @@ screenGui.Parent = PlayerGui
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Parent = screenGui
-toggleButton.Size = UDim2.new(0, 46, 0, 46)
-toggleButton.Position = UDim2.new(1, -58, 0, 20)
+toggleButton.Size = UDim2.new(0, 36, 0, 36)
+toggleButton.Position = UDim2.new(1, -46, 0, 15)
 toggleButton.BackgroundColor3 = COLORS.accent
 toggleButton.BorderSizePixel = 0
 toggleButton.Text = "☰"
@@ -81,8 +82,8 @@ makeDraggable(toggleButton)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Parent = screenGui
-mainFrame.Size = UDim2.new(0, 300, 0, 300)
-mainFrame.Position = UDim2.new(0.5, -150, 0.5, -150)
+mainFrame.Size = UDim2.new(0, 220, 0, 240)
+mainFrame.Position = UDim2.new(0.5, -110, 0.5, -120)
 mainFrame.BackgroundColor3 = COLORS.bg
 mainFrame.BorderSizePixel = 0
 mainFrame.Visible = true
@@ -90,19 +91,19 @@ mainFrame.Active = true
 makeDraggable(mainFrame)
 
 local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 10)
+mainCorner.CornerRadius = UDim.new(0, 8)
 mainCorner.Parent = mainFrame
 
 local mainStroke = Instance.new("UIStroke")
 mainStroke.Color = COLORS.accent
-mainStroke.Thickness = 1.5
+mainStroke.Thickness = 1
 mainStroke.Transparency = 0.5
 mainStroke.Parent = mainFrame
 
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Name = "TitleLabel"
 titleLabel.Parent = mainFrame
-titleLabel.Size = UDim2.new(1, 0, 0, 26)
+titleLabel.Size = UDim2.new(1, 0, 0, 20)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Text = "صنع لانشر"
 titleLabel.TextColor3 = COLORS.text
@@ -113,14 +114,14 @@ titleLabel.ZIndex = 2
 local gridFrame = Instance.new("Frame")
 gridFrame.Name = "GridFrame"
 gridFrame.Parent = mainFrame
-gridFrame.Size = UDim2.new(1, -10, 1, -36)
-gridFrame.Position = UDim2.new(0, 5, 0, 30)
+gridFrame.Size = UDim2.new(1, -6, 1, -26)
+gridFrame.Position = UDim2.new(0, 3, 0, 22)
 gridFrame.BackgroundTransparency = 1
 
 local gridLayout = Instance.new("UIGridLayout")
 gridLayout.Parent = gridFrame
-gridLayout.CellSize = UDim2.new(0.5, -4, 0.5, -4)
-gridLayout.CellPadding = UDim2.new(0, 8, 0, 8)
+gridLayout.CellSize = UDim2.new(0.5, -2, 0.5, -2)
+gridLayout.CellPadding = UDim2.new(0, 4, 0, 4)
 gridLayout.SortOrder = Enum.SortOrder.LayoutOrder
 gridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 gridLayout.VerticalAlignment = Enum.VerticalAlignment.Center
@@ -136,28 +137,28 @@ local function createCard(index)
     card.LayoutOrder = index
 
     local cardCorner = Instance.new("UICorner")
-    cardCorner.CornerRadius = UDim.new(0, 6)
+    cardCorner.CornerRadius = UDim.new(0, 5)
     cardCorner.Parent = card
 
     local cardPadding = Instance.new("UIPadding")
-    cardPadding.PaddingTop = UDim.new(0, 4)
-    cardPadding.PaddingBottom = UDim.new(0, 4)
-    cardPadding.PaddingLeft = UDim.new(0, 4)
-    cardPadding.PaddingRight = UDim.new(0, 4)
+    cardPadding.PaddingTop = UDim.new(0, 3)
+    cardPadding.PaddingBottom = UDim.new(0, 3)
+    cardPadding.PaddingLeft = UDim.new(0, 3)
+    cardPadding.PaddingRight = UDim.new(0, 3)
     cardPadding.Parent = card
 
     local cardLayout = Instance.new("UIListLayout")
     cardLayout.Parent = card
     cardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    cardLayout.Padding = UDim.new(0, 3)
+    cardLayout.Padding = UDim.new(0, 2)
 
     local textBox = Instance.new("TextBox")
     textBox.Name = "InputBox"
     textBox.Parent = card
-    textBox.Size = UDim2.new(1, 0, 0, 22)
+    textBox.Size = UDim2.new(1, 0, 0, 18)
     textBox.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
     textBox.BorderSizePixel = 0
-    textBox.PlaceholderText = "3 أحرف..."
+    textBox.PlaceholderText = "3 أحرف"
     textBox.Text = ""
     textBox.TextColor3 = COLORS.text
     textBox.PlaceholderColor3 = Color3.fromRGB(160, 160, 170)
@@ -167,13 +168,13 @@ local function createCard(index)
     textBox.ZIndex = 2
 
     local tbCorner = Instance.new("UICorner")
-    tbCorner.CornerRadius = UDim.new(0, 4)
+    tbCorner.CornerRadius = UDim.new(0, 3)
     tbCorner.Parent = textBox
 
     local goButton = Instance.new("TextButton")
     goButton.Name = "GoButton"
     goButton.Parent = card
-    goButton.Size = UDim2.new(1, 0, 0, 20)
+    goButton.Size = UDim2.new(1, 0, 0, 16)
     goButton.BackgroundColor3 = COLORS.button
     goButton.BorderSizePixel = 0
     goButton.Text = "هيا بنا!"
@@ -183,7 +184,7 @@ local function createCard(index)
     goButton.ZIndex = 2
 
     local goCorner = Instance.new("UICorner")
-    goCorner.CornerRadius = UDim.new(0, 4)
+    goCorner.CornerRadius = UDim.new(0, 3)
     goCorner.Parent = goButton
 
     local resultFrame = Instance.new("Frame")
@@ -197,12 +198,12 @@ local function createCard(index)
     local resultLayout = Instance.new("UIListLayout")
     resultLayout.Parent = resultFrame
     resultLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    resultLayout.Padding = UDim.new(0, 1)
+    resultLayout.Padding = UDim.new(0, 0)
 
     local avatarImage = Instance.new("ImageLabel")
     avatarImage.Name = "AvatarImage"
     avatarImage.Parent = resultFrame
-    avatarImage.Size = UDim2.new(0, 34, 0, 34)
+    avatarImage.Size = UDim2.new(0, 26, 0, 26)
     avatarImage.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
     avatarImage.BorderSizePixel = 0
     avatarImage.Image = ""
@@ -215,7 +216,7 @@ local function createCard(index)
     local nameLabel = Instance.new("TextLabel")
     nameLabel.Name = "NameLabel"
     nameLabel.Parent = resultFrame
-    nameLabel.Size = UDim2.new(1, 0, 0, 14)
+    nameLabel.Size = UDim2.new(1, 0, 0, 11)
     nameLabel.BackgroundTransparency = 1
     nameLabel.Text = ""
     nameLabel.TextColor3 = COLORS.text
@@ -226,7 +227,7 @@ local function createCard(index)
     local timerLabel = Instance.new("TextLabel")
     timerLabel.Name = "TimerLabel"
     timerLabel.Parent = resultFrame
-    timerLabel.Size = UDim2.new(1, 0, 0, 14)
+    timerLabel.Size = UDim2.new(1, 0, 0, 11)
     timerLabel.BackgroundTransparency = 1
     timerLabel.Text = "00:00"
     timerLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -237,7 +238,7 @@ local function createCard(index)
     local leaveLabel = Instance.new("TextLabel")
     leaveLabel.Name = "LeaveLabel"
     leaveLabel.Parent = resultFrame
-    leaveLabel.Size = UDim2.new(1, 0, 0, 12)
+    leaveLabel.Size = UDim2.new(1, 0, 0, 9)
     leaveLabel.BackgroundTransparency = 1
     leaveLabel.Text = "خروج: 0"
     leaveLabel.TextColor3 = COLORS.red
@@ -248,7 +249,7 @@ local function createCard(index)
     local joinLabel = Instance.new("TextLabel")
     joinLabel.Name = "JoinLabel"
     joinLabel.Parent = resultFrame
-    joinLabel.Size = UDim2.new(1, 0, 0, 12)
+    joinLabel.Size = UDim2.new(1, 0, 0, 9)
     joinLabel.BackgroundTransparency = 1
     joinLabel.Text = "دخول: 0"
     joinLabel.TextColor3 = COLORS.blue
@@ -268,6 +269,7 @@ local function createCard(index)
         joinLabel = joinLabel,
         player = nil,
         isTracking = false,
+        isRegistered = false,
         startTime = 0,
         accumulatedTime = 0,
         leaveCount = 0,
@@ -277,6 +279,8 @@ local function createCard(index)
     cards[index] = cardData
 
     textBox:GetPropertyChangedSignal("Text"):Connect(function()
+        if cardData.isRegistered then return end
+
         local text = textBox.Text
         if #text < 3 then
             resultFrame.Visible = false
@@ -296,11 +300,21 @@ local function createCard(index)
         end
 
         if foundPlayer then
+            if cardData.player == foundPlayer then
+                return
+            end
+
             cardData.player = foundPlayer
+            cardData.isTracking = true
+            cardData.startTime = os.time()
+            cardData.accumulatedTime = 0
+            cardData.leaveCount = 0
+            cardData.joinCount = 0
+
             resultFrame.Visible = true
 
             local thumbType = Enum.ThumbnailType.HeadShot
-            local thumbSize = Enum.ThumbnailSize.Size150x150
+            local thumbSize = Enum.ThumbnailSize.Size100x100
             local success, content = pcall(function()
                 return Players:GetUserThumbnailAsync(foundPlayer.UserId, thumbType, thumbSize)
             end)
@@ -308,16 +322,13 @@ local function createCard(index)
             if success and content then
                 avatarImage.Image = content
             else
-                avatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. foundPlayer.UserId .. "&w=150&h=150"
+                avatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. foundPlayer.UserId .. "&w=100&h=100"
             end
 
             nameLabel.Text = foundPlayer.Name
             timerLabel.Text = "00:00"
             leaveLabel.Text = "خروج: 0"
             joinLabel.Text = "دخول: 0"
-            cardData.leaveCount = 0
-            cardData.joinCount = 0
-            cardData.isTracking = false
         else
             resultFrame.Visible = false
             cardData.player = nil
@@ -326,6 +337,8 @@ local function createCard(index)
     end)
 
     goButton.MouseButton1Click:Connect(function()
+        if cardData.isRegistered then return end
+
         if not cardData.player then
             local originalColor = goButton.BackgroundColor3
             goButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
@@ -334,27 +347,24 @@ local function createCard(index)
             return
         end
 
-        cardData.isTracking = true
-        cardData.startTime = os.time()
-        cardData.accumulatedTime = 0
-        cardData.leaveCount = 0
-        cardData.joinCount = 0
+        cardData.isRegistered = true
+        textBox.TextEditable = false
+        textBox.BackgroundColor3 = Color3.fromRGB(40, 60, 40)
+        goButton.Text = "✓ مسجل"
+        goButton.BackgroundColor3 = COLORS.registered
+    end)
 
-        timerLabel.Text = "00:00"
-        leaveLabel.Text = "خروج: 0"
-        joinLabel.Text = "دخول: 0"
-        resultFrame.Visible = true
-
-        local plr = cardData.player
-        local thumbType = Enum.ThumbnailType.HeadShot
-        local thumbSize = Enum.ThumbnailSize.Size150x150
-        local success, content = pcall(function()
-            return Players:GetUserThumbnailAsync(plr.UserId, thumbType, thumbSize)
-        end)
-        if success and content then
-            avatarImage.Image = content
-        end
-        nameLabel.Text = plr.Name
+    goButton.MouseEnter:Connect(function()
+        if cardData.isRegistered then return end
+        TweenService:Create(goButton, TweenInfo.new(0.15), {
+            BackgroundColor3 = COLORS.buttonHover
+        }):Play()
+    end)
+    goButton.MouseLeave:Connect(function()
+        if cardData.isRegistered then return end
+        TweenService:Create(goButton, TweenInfo.new(0.15), {
+            BackgroundColor3 = COLORS.button
+        }):Play()
     end)
 
     return cardData
@@ -381,14 +391,11 @@ end
 
 local function onPlayerAdded(player)
     for _, data in pairs(cards) do
-        if data.player == player and data.leaveCount > 0 then
+        if data.player == player and data.leaveCount > 0 and not data.isTracking then
             data.joinCount = data.joinCount + 1
             data.joinLabel.Text = "دخول: " .. data.joinCount
-
-            if not data.isTracking then
-                data.isTracking = true
-                data.startTime = os.time()
-            end
+            data.startTime = os.time()
+            data.isTracking = true
         end
     end
 end
@@ -406,16 +413,3 @@ RunService.Heartbeat:Connect(function()
         end
     end
 end)
-
-for _, data in pairs(cards) do
-    data.goButton.MouseEnter:Connect(function()
-        TweenService:Create(data.goButton, TweenInfo.new(0.15), {
-            BackgroundColor3 = COLORS.buttonHover
-        }):Play()
-    end)
-    data.goButton.MouseLeave:Connect(function()
-        TweenService:Create(data.goButton, TweenInfo.new(0.15), {
-            BackgroundColor3 = COLORS.button
-        }):Play()
-    end)
-end
