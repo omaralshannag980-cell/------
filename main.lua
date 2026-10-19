@@ -56,13 +56,14 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "Luncher_UI"
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.IgnoreGuiInset = true
 screenGui.Parent = PlayerGui
 
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Parent = screenGui
-toggleButton.Size = UDim2.new(0, 60, 0, 60)
-toggleButton.Position = UDim2.new(1, -80, 0, 80)
+toggleButton.Size = UDim2.new(0, 46, 0, 46)
+toggleButton.Position = UDim2.new(1, -58, 0, 20)
 toggleButton.BackgroundColor3 = COLORS.accent
 toggleButton.BorderSizePixel = 0
 toggleButton.Text = "☰"
@@ -80,8 +81,8 @@ makeDraggable(toggleButton)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Parent = screenGui
-mainFrame.Size = UDim2.new(0, 560, 0, 480)
-mainFrame.Position = UDim2.new(0.5, -280, 0.5, -240)
+mainFrame.Size = UDim2.new(0, 300, 0, 300)
+mainFrame.Position = UDim2.new(0.5, -150, 0.5, -150)
 mainFrame.BackgroundColor3 = COLORS.bg
 mainFrame.BorderSizePixel = 0
 mainFrame.Visible = true
@@ -89,19 +90,19 @@ mainFrame.Active = true
 makeDraggable(mainFrame)
 
 local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 12)
+mainCorner.CornerRadius = UDim.new(0, 10)
 mainCorner.Parent = mainFrame
 
 local mainStroke = Instance.new("UIStroke")
 mainStroke.Color = COLORS.accent
-mainStroke.Thickness = 2
+mainStroke.Thickness = 1.5
 mainStroke.Transparency = 0.5
 mainStroke.Parent = mainFrame
 
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Name = "TitleLabel"
 titleLabel.Parent = mainFrame
-titleLabel.Size = UDim2.new(1, 0, 0, 40)
+titleLabel.Size = UDim2.new(1, 0, 0, 26)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Text = "صنع لانشر"
 titleLabel.TextColor3 = COLORS.text
@@ -112,14 +113,14 @@ titleLabel.ZIndex = 2
 local gridFrame = Instance.new("Frame")
 gridFrame.Name = "GridFrame"
 gridFrame.Parent = mainFrame
-gridFrame.Size = UDim2.new(1, -20, 1, -60)
-gridFrame.Position = UDim2.new(0, 10, 0, 50)
+gridFrame.Size = UDim2.new(1, -10, 1, -36)
+gridFrame.Position = UDim2.new(0, 5, 0, 30)
 gridFrame.BackgroundTransparency = 1
 
 local gridLayout = Instance.new("UIGridLayout")
 gridLayout.Parent = gridFrame
-gridLayout.CellSize = UDim2.new(0.5, -8, 0.5, -8)
-gridLayout.CellPadding = UDim2.new(0, 16, 0, 16)
+gridLayout.CellSize = UDim2.new(0.5, -4, 0.5, -4)
+gridLayout.CellPadding = UDim2.new(0, 8, 0, 8)
 gridLayout.SortOrder = Enum.SortOrder.LayoutOrder
 gridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 gridLayout.VerticalAlignment = Enum.VerticalAlignment.Center
@@ -135,28 +136,28 @@ local function createCard(index)
     card.LayoutOrder = index
 
     local cardCorner = Instance.new("UICorner")
-    cardCorner.CornerRadius = UDim.new(0, 8)
+    cardCorner.CornerRadius = UDim.new(0, 6)
     cardCorner.Parent = card
 
     local cardPadding = Instance.new("UIPadding")
-    cardPadding.PaddingTop = UDim.new(0, 6)
-    cardPadding.PaddingBottom = UDim.new(0, 6)
-    cardPadding.PaddingLeft = UDim.new(0, 6)
-    cardPadding.PaddingRight = UDim.new(0, 6)
+    cardPadding.PaddingTop = UDim.new(0, 4)
+    cardPadding.PaddingBottom = UDim.new(0, 4)
+    cardPadding.PaddingLeft = UDim.new(0, 4)
+    cardPadding.PaddingRight = UDim.new(0, 4)
     cardPadding.Parent = card
 
     local cardLayout = Instance.new("UIListLayout")
     cardLayout.Parent = card
     cardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    cardLayout.Padding = UDim.new(0, 6)
+    cardLayout.Padding = UDim.new(0, 3)
 
     local textBox = Instance.new("TextBox")
     textBox.Name = "InputBox"
     textBox.Parent = card
-    textBox.Size = UDim2.new(1, 0, 0, 32)
+    textBox.Size = UDim2.new(1, 0, 0, 22)
     textBox.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
     textBox.BorderSizePixel = 0
-    textBox.PlaceholderText = "أول 3 أحرف من اسم اللاعب..."
+    textBox.PlaceholderText = "3 أحرف..."
     textBox.Text = ""
     textBox.TextColor3 = COLORS.text
     textBox.PlaceholderColor3 = Color3.fromRGB(160, 160, 170)
@@ -166,13 +167,13 @@ local function createCard(index)
     textBox.ZIndex = 2
 
     local tbCorner = Instance.new("UICorner")
-    tbCorner.CornerRadius = UDim.new(0, 6)
+    tbCorner.CornerRadius = UDim.new(0, 4)
     tbCorner.Parent = textBox
 
     local goButton = Instance.new("TextButton")
     goButton.Name = "GoButton"
     goButton.Parent = card
-    goButton.Size = UDim2.new(1, 0, 0, 30)
+    goButton.Size = UDim2.new(1, 0, 0, 20)
     goButton.BackgroundColor3 = COLORS.button
     goButton.BorderSizePixel = 0
     goButton.Text = "هيا بنا!"
@@ -182,7 +183,7 @@ local function createCard(index)
     goButton.ZIndex = 2
 
     local goCorner = Instance.new("UICorner")
-    goCorner.CornerRadius = UDim.new(0, 6)
+    goCorner.CornerRadius = UDim.new(0, 4)
     goCorner.Parent = goButton
 
     local resultFrame = Instance.new("Frame")
@@ -196,12 +197,12 @@ local function createCard(index)
     local resultLayout = Instance.new("UIListLayout")
     resultLayout.Parent = resultFrame
     resultLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    resultLayout.Padding = UDim.new(0, 4)
+    resultLayout.Padding = UDim.new(0, 1)
 
     local avatarImage = Instance.new("ImageLabel")
     avatarImage.Name = "AvatarImage"
     avatarImage.Parent = resultFrame
-    avatarImage.Size = UDim2.new(0, 64, 0, 64)
+    avatarImage.Size = UDim2.new(0, 34, 0, 34)
     avatarImage.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
     avatarImage.BorderSizePixel = 0
     avatarImage.Image = ""
@@ -214,7 +215,7 @@ local function createCard(index)
     local nameLabel = Instance.new("TextLabel")
     nameLabel.Name = "NameLabel"
     nameLabel.Parent = resultFrame
-    nameLabel.Size = UDim2.new(1, 0, 0, 22)
+    nameLabel.Size = UDim2.new(1, 0, 0, 14)
     nameLabel.BackgroundTransparency = 1
     nameLabel.Text = ""
     nameLabel.TextColor3 = COLORS.text
@@ -225,7 +226,7 @@ local function createCard(index)
     local timerLabel = Instance.new("TextLabel")
     timerLabel.Name = "TimerLabel"
     timerLabel.Parent = resultFrame
-    timerLabel.Size = UDim2.new(1, 0, 0, 22)
+    timerLabel.Size = UDim2.new(1, 0, 0, 14)
     timerLabel.BackgroundTransparency = 1
     timerLabel.Text = "00:00"
     timerLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -236,7 +237,7 @@ local function createCard(index)
     local leaveLabel = Instance.new("TextLabel")
     leaveLabel.Name = "LeaveLabel"
     leaveLabel.Parent = resultFrame
-    leaveLabel.Size = UDim2.new(1, 0, 0, 20)
+    leaveLabel.Size = UDim2.new(1, 0, 0, 12)
     leaveLabel.BackgroundTransparency = 1
     leaveLabel.Text = "خروج: 0"
     leaveLabel.TextColor3 = COLORS.red
@@ -247,7 +248,7 @@ local function createCard(index)
     local joinLabel = Instance.new("TextLabel")
     joinLabel.Name = "JoinLabel"
     joinLabel.Parent = resultFrame
-    joinLabel.Size = UDim2.new(1, 0, 0, 20)
+    joinLabel.Size = UDim2.new(1, 0, 0, 12)
     joinLabel.BackgroundTransparency = 1
     joinLabel.Text = "دخول: 0"
     joinLabel.TextColor3 = COLORS.blue
@@ -299,7 +300,7 @@ local function createCard(index)
             resultFrame.Visible = true
 
             local thumbType = Enum.ThumbnailType.HeadShot
-            local thumbSize = Enum.ThumbnailSize.Size420x420
+            local thumbSize = Enum.ThumbnailSize.Size150x150
             local success, content = pcall(function()
                 return Players:GetUserThumbnailAsync(foundPlayer.UserId, thumbType, thumbSize)
             end)
@@ -307,7 +308,7 @@ local function createCard(index)
             if success and content then
                 avatarImage.Image = content
             else
-                avatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. foundPlayer.UserId .. "&w=420&h=420"
+                avatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. foundPlayer.UserId .. "&w=150&h=150"
             end
 
             nameLabel.Text = foundPlayer.Name
@@ -346,7 +347,7 @@ local function createCard(index)
 
         local plr = cardData.player
         local thumbType = Enum.ThumbnailType.HeadShot
-        local thumbSize = Enum.ThumbnailSize.Size420x420
+        local thumbSize = Enum.ThumbnailSize.Size150x150
         local success, content = pcall(function()
             return Players:GetUserThumbnailAsync(plr.UserId, thumbType, thumbSize)
         end)
