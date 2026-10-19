@@ -128,6 +128,16 @@ gridLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
 local cards = {}
 
+local function fetchThumb(userId)
+    local ok, content = pcall(function()
+        return Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
+    end)
+    if ok and content then
+        return content
+    end
+    return "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=100&h=100"
+end
+
 local function createCard(index)
     local card = Instance.new("Frame")
     card.Name = "Card_" .. index
@@ -267,7 +277,7 @@ local function createCard(index)
         timerLabel = timerLabel,
         leaveLabel = leaveLabel,
         joinLabel = joinLabel,
-        player = nil,
+        userId = nil,
         isTracking = false,
         isRegistered = false,
         startTime = 0,
@@ -278,20 +288,47 @@ local function createCard(index)
 
     cards[index] = cardData
 
+    local function resetForNewPlayer(plr)
+        cardData.userId = plr.UserId
+        cardData.isTracking = true
+        cardData.startTime = os.time()
+        cardData.accumulatedTime = 0
+        cardData.leaveCount = 0
+        cardData.joinCount = 0
+
+        resultFrame.Visible = true
+        avatarImage.Image = fetchThumb(plr.UserId)
+        nameLabel.Text = plr.Name
+        timerLabel.Text = "00:00"
+        leaveLabel.Text = "خروج: 0"
+        joinLabel.Text = "دخول: 0"
+    end
+
+    local function clearCard()
+        cardData.userId = nil
+        cardData.isTracking = false
+        cardData.accumulatedTime = 0
+        cardData.leaveCount = 0
+        cardData.joinCount = 0
+        resultFrame.Visible = false
+        avatarImage.Image = ""
+        nameLabel.Text = ""
+        timerLabel.Text = "00:00"
+        leaveLabel.Text = "خروج: 0"
+        joinLabel.Text = "دخول: 0"
+    end
+
     textBox:GetPropertyChangedSignal("Text"):Connect(function()
         if cardData.isRegistered then return end
 
         local text = textBox.Text
         if #text < 3 then
-            resultFrame.Visible = false
-            cardData.player = nil
-            cardData.isTracking = false
+            clearCard()
             return
         end
 
         local prefix = string.sub(text, 1, 3):lower()
         local foundPlayer = nil
-
         for _, plr in ipairs(Players:GetPlayers()) do
             if string.sub(plr.Name, 1, 3):lower() == prefix then
                 foundPlayer = plr
@@ -300,46 +337,18 @@ local function createCard(index)
         end
 
         if foundPlayer then
-            if cardData.player == foundPlayer then
+            if cardData.userId == foundPlayer.UserId then
                 return
             end
-
-            cardData.player = foundPlayer
-            cardData.isTracking = true
-            cardData.startTime = os.time()
-            cardData.accumulatedTime = 0
-            cardData.leaveCount = 0
-            cardData.joinCount = 0
-
-            resultFrame.Visible = true
-
-            local thumbType = Enum.ThumbnailType.HeadShot
-            local thumbSize = Enum.ThumbnailSize.Size100x100
-            local success, content = pcall(function()
-                return Players:GetUserThumbnailAsync(foundPlayer.UserId, thumbType, thumbSize)
-            end)
-
-            if success and content then
-                avatarImage.Image = content
-            else
-                avatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. foundPlayer.UserId .. "&w=100&h=100"
-            end
-
-            nameLabel.Text = foundPlayer.Name
-            timerLabel.Text = "00:00"
-            leaveLabel.Text = "خروج: 0"
-            joinLabel.Text = "دخول: 0"
+            resetForNewPlayer(foundPlayer)
         else
-            resultFrame.Visible = false
-            cardData.player = nil
-            cardData.isTracking = false
+            clearCard()
         end
     end)
 
     goButton.MouseButton1Click:Connect(function()
         if cardData.isRegistered then return end
-
-        if not cardData.player then
+        if not cardData.userId then
             local originalColor = goButton.BackgroundColor3
             goButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
             task.wait(0.2)
@@ -378,34 +387,33 @@ toggleButton.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
 end)
 
-local function onPlayerRemoving(player)
+Players.PlayerRemoving:Connect(function(player)
     for _, data in pairs(cards) do
-        if data.player == player and data.isTracking then
+        if data.userId == player.UserId and data.isTracking then
             data.isTracking = false
             data.accumulatedTime = data.accumulatedTime + (os.time() - data.startTime)
             data.leaveCount = data.leaveCount + 1
             data.leaveLabel.Text = "خروج: " .. data.leaveCount
         end
     end
-end
+end)
 
-local function onPlayerAdded(player)
+Players.PlayerAdded:Connect(function(player)
     for _, data in pairs(cards) do
-        if data.player == player and data.leaveCount > 0 and not data.isTracking then
+        if data.userId == player.UserId and not data.isTracking and data.leaveCount > 0 then
             data.joinCount = data.joinCount + 1
             data.joinLabel.Text = "دخول: " .. data.joinCount
             data.startTime = os.time()
             data.isTracking = true
+            data.avatarImage.Image = fetchThumb(player.UserId)
+            data.nameLabel.Text = player.Name
         end
     end
-end
-
-Players.PlayerRemoving:Connect(onPlayerRemoving)
-Players.PlayerAdded:Connect(onPlayerAdded)
+end)
 
 RunService.Heartbeat:Connect(function()
     for _, data in pairs(cards) do
-        if data.isTracking and data.player and data.player.Parent then
+        if data.isTracking then
             local elapsed = data.accumulatedTime + (os.time() - data.startTime)
             local minutes = math.floor(elapsed / 60)
             local seconds = elapsed % 60
