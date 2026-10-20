@@ -7,13 +7,13 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local COLORS = {
-    bg = Color3.fromRGB(25, 25, 30),
-    card = Color3.fromRGB(40, 40, 48),
+    bg = Color3.fromRGB(0, 0, 0),
+    card = Color3.fromRGB(18, 18, 18),
     text = Color3.fromRGB(255, 255, 255),
     red = Color3.fromRGB(255, 70, 70),
     blue = Color3.fromRGB(70, 150, 255),
-    button = Color3.fromRGB(60, 60, 75),
-    buttonHover = Color3.fromRGB(80, 80, 100),
+    button = Color3.fromRGB(45, 45, 55),
+    buttonHover = Color3.fromRGB(70, 70, 85),
     registered = Color3.fromRGB(40, 120, 40),
     accent = Color3.fromRGB(0, 170, 255)
 }
@@ -63,8 +63,8 @@ screenGui.Parent = PlayerGui
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Parent = screenGui
-toggleButton.Size = UDim2.new(0, 36, 0, 36)
-toggleButton.Position = UDim2.new(1, -46, 0, 15)
+toggleButton.Size = UDim2.new(0, 40, 0, 40)
+toggleButton.Position = UDim2.new(1, -50, 0, 15)
 toggleButton.BackgroundColor3 = COLORS.accent
 toggleButton.BorderSizePixel = 0
 toggleButton.Text = "☰"
@@ -82,8 +82,8 @@ makeDraggable(toggleButton)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Parent = screenGui
-mainFrame.Size = UDim2.new(0, 220, 0, 240)
-mainFrame.Position = UDim2.new(0.5, -110, 0.5, -120)
+mainFrame.Size = UDim2.new(0, 340, 0, 300)
+mainFrame.Position = UDim2.new(0.5, -170, 0.5, -150)
 mainFrame.BackgroundColor3 = COLORS.bg
 mainFrame.BorderSizePixel = 0
 mainFrame.Visible = true
@@ -91,37 +91,72 @@ mainFrame.Active = true
 makeDraggable(mainFrame)
 
 local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 8)
+mainCorner.CornerRadius = UDim.new(0, 10)
 mainCorner.Parent = mainFrame
 
 local mainStroke = Instance.new("UIStroke")
-mainStroke.Color = COLORS.accent
+mainStroke.Color = Color3.fromRGB(255, 255, 255)
 mainStroke.Thickness = 1
-mainStroke.Transparency = 0.5
+mainStroke.Transparency = 0.6
 mainStroke.Parent = mainFrame
 
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Name = "TitleLabel"
 titleLabel.Parent = mainFrame
-titleLabel.Size = UDim2.new(1, 0, 0, 20)
+titleLabel.Size = UDim2.new(1, 0, 0, 28)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Text = "صنع لانشر"
-titleLabel.TextColor3 = COLORS.text
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleLabel.TextScaled = true
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.ZIndex = 2
 
+local titleStroke = Instance.new("UIStroke")
+titleStroke.Color = Color3.fromRGB(255, 255, 255)
+titleStroke.Thickness = 2
+titleStroke.Transparency = 0.2
+titleStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Text
+titleStroke.Parent = titleLabel
+
+local titleGradient = Instance.new("UIGradient")
+titleGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(180, 180, 180)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(180, 180, 180))
+})
+titleGradient.Parent = titleLabel
+
+task.spawn(function()
+    while true do
+        titleGradient.Offset = Vector2.new(-1, 0)
+        TweenService:Create(titleGradient, TweenInfo.new(1.8, Enum.EasingStyle.Linear), {
+            Offset = Vector2.new(1, 0)
+        }):Play()
+        task.wait(1.8)
+    end
+end)
+
+task.spawn(function()
+    while true do
+        titleStroke.Transparency = 0.1
+        TweenService:Create(titleStroke, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            Transparency = 0.7
+        }):Play()
+        task.wait(1.2)
+    end
+end)
+
 local gridFrame = Instance.new("Frame")
 gridFrame.Name = "GridFrame"
 gridFrame.Parent = mainFrame
-gridFrame.Size = UDim2.new(1, -6, 1, -26)
-gridFrame.Position = UDim2.new(0, 3, 0, 22)
+gridFrame.Size = UDim2.new(1, -8, 1, -36)
+gridFrame.Position = UDim2.new(0, 4, 0, 30)
 gridFrame.BackgroundTransparency = 1
 
 local gridLayout = Instance.new("UIGridLayout")
 gridLayout.Parent = gridFrame
-gridLayout.CellSize = UDim2.new(0.5, -2, 0.5, -2)
-gridLayout.CellPadding = UDim2.new(0, 4, 0, 4)
+gridLayout.CellSize = UDim2.new(0.5, -3, 0.5, -3)
+gridLayout.CellPadding = UDim2.new(0, 6, 0, 6)
 gridLayout.SortOrder = Enum.SortOrder.LayoutOrder
 gridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 gridLayout.VerticalAlignment = Enum.VerticalAlignment.Center
@@ -130,12 +165,12 @@ local cards = {}
 
 local function fetchThumb(userId)
     local ok, content = pcall(function()
-        return Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
+        return Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
     end)
     if ok and content then
         return content
     end
-    return "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=100&h=100"
+    return "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=150&h=150"
 end
 
 local function createCard(index)
@@ -147,26 +182,32 @@ local function createCard(index)
     card.LayoutOrder = index
 
     local cardCorner = Instance.new("UICorner")
-    cardCorner.CornerRadius = UDim.new(0, 5)
+    cardCorner.CornerRadius = UDim.new(0, 6)
     cardCorner.Parent = card
 
+    local cardStroke = Instance.new("UIStroke")
+    cardStroke.Color = Color3.fromRGB(70, 70, 80)
+    cardStroke.Thickness = 1
+    cardStroke.Transparency = 0.4
+    cardStroke.Parent = card
+
     local cardPadding = Instance.new("UIPadding")
-    cardPadding.PaddingTop = UDim.new(0, 3)
-    cardPadding.PaddingBottom = UDim.new(0, 3)
-    cardPadding.PaddingLeft = UDim.new(0, 3)
-    cardPadding.PaddingRight = UDim.new(0, 3)
+    cardPadding.PaddingTop = UDim.new(0, 4)
+    cardPadding.PaddingBottom = UDim.new(0, 4)
+    cardPadding.PaddingLeft = UDim.new(0, 4)
+    cardPadding.PaddingRight = UDim.new(0, 4)
     cardPadding.Parent = card
 
     local cardLayout = Instance.new("UIListLayout")
     cardLayout.Parent = card
     cardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    cardLayout.Padding = UDim.new(0, 2)
+    cardLayout.Padding = UDim.new(0, 3)
 
     local textBox = Instance.new("TextBox")
     textBox.Name = "InputBox"
     textBox.Parent = card
-    textBox.Size = UDim2.new(1, 0, 0, 18)
-    textBox.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+    textBox.Size = UDim2.new(1, 0, 0, 22)
+    textBox.BackgroundColor3 = Color3.fromRGB(35, 35, 42)
     textBox.BorderSizePixel = 0
     textBox.PlaceholderText = "3 أحرف"
     textBox.Text = ""
@@ -178,13 +219,13 @@ local function createCard(index)
     textBox.ZIndex = 2
 
     local tbCorner = Instance.new("UICorner")
-    tbCorner.CornerRadius = UDim.new(0, 3)
+    tbCorner.CornerRadius = UDim.new(0, 4)
     tbCorner.Parent = textBox
 
     local goButton = Instance.new("TextButton")
     goButton.Name = "GoButton"
     goButton.Parent = card
-    goButton.Size = UDim2.new(1, 0, 0, 16)
+    goButton.Size = UDim2.new(1, 0, 0, 20)
     goButton.BackgroundColor3 = COLORS.button
     goButton.BorderSizePixel = 0
     goButton.Text = "هيا بنا!"
@@ -194,7 +235,7 @@ local function createCard(index)
     goButton.ZIndex = 2
 
     local goCorner = Instance.new("UICorner")
-    goCorner.CornerRadius = UDim.new(0, 3)
+    goCorner.CornerRadius = UDim.new(0, 4)
     goCorner.Parent = goButton
 
     local resultFrame = Instance.new("Frame")
@@ -208,12 +249,12 @@ local function createCard(index)
     local resultLayout = Instance.new("UIListLayout")
     resultLayout.Parent = resultFrame
     resultLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    resultLayout.Padding = UDim.new(0, 0)
+    resultLayout.Padding = UDim.new(0, 1)
 
     local avatarImage = Instance.new("ImageLabel")
     avatarImage.Name = "AvatarImage"
     avatarImage.Parent = resultFrame
-    avatarImage.Size = UDim2.new(0, 26, 0, 26)
+    avatarImage.Size = UDim2.new(0, 32, 0, 32)
     avatarImage.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
     avatarImage.BorderSizePixel = 0
     avatarImage.Image = ""
@@ -226,7 +267,7 @@ local function createCard(index)
     local nameLabel = Instance.new("TextLabel")
     nameLabel.Name = "NameLabel"
     nameLabel.Parent = resultFrame
-    nameLabel.Size = UDim2.new(1, 0, 0, 11)
+    nameLabel.Size = UDim2.new(1, 0, 0, 13)
     nameLabel.BackgroundTransparency = 1
     nameLabel.Text = ""
     nameLabel.TextColor3 = COLORS.text
@@ -237,18 +278,25 @@ local function createCard(index)
     local timerLabel = Instance.new("TextLabel")
     timerLabel.Name = "TimerLabel"
     timerLabel.Parent = resultFrame
-    timerLabel.Size = UDim2.new(1, 0, 0, 11)
+    timerLabel.Size = UDim2.new(1, 0, 0, 13)
     timerLabel.BackgroundTransparency = 1
-    timerLabel.Text = "00:00"
-    timerLabel.TextColor3 = Color3.new(1, 1, 1)
+    timerLabel.Text = "00:00:00"
+    timerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     timerLabel.TextScaled = true
     timerLabel.Font = Enum.Font.GothamBold
     timerLabel.ZIndex = 2
 
+    local timerStroke = Instance.new("UIStroke")
+    timerStroke.Color = Color3.fromRGB(255, 255, 255)
+    timerStroke.Thickness = 1
+    timerStroke.Transparency = 0.5
+    timerStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Text
+    timerStroke.Parent = timerLabel
+
     local leaveLabel = Instance.new("TextLabel")
     leaveLabel.Name = "LeaveLabel"
     leaveLabel.Parent = resultFrame
-    leaveLabel.Size = UDim2.new(1, 0, 0, 9)
+    leaveLabel.Size = UDim2.new(1, 0, 0, 11)
     leaveLabel.BackgroundTransparency = 1
     leaveLabel.Text = "خروج: 0"
     leaveLabel.TextColor3 = COLORS.red
@@ -259,7 +307,7 @@ local function createCard(index)
     local joinLabel = Instance.new("TextLabel")
     joinLabel.Name = "JoinLabel"
     joinLabel.Parent = resultFrame
-    joinLabel.Size = UDim2.new(1, 0, 0, 9)
+    joinLabel.Size = UDim2.new(1, 0, 0, 11)
     joinLabel.BackgroundTransparency = 1
     joinLabel.Text = "دخول: 0"
     joinLabel.TextColor3 = COLORS.blue
@@ -299,7 +347,7 @@ local function createCard(index)
         resultFrame.Visible = true
         avatarImage.Image = fetchThumb(plr.UserId)
         nameLabel.Text = plr.Name
-        timerLabel.Text = "00:00"
+        timerLabel.Text = "00:00:00"
         leaveLabel.Text = "خروج: 0"
         joinLabel.Text = "دخول: 0"
     end
@@ -313,7 +361,7 @@ local function createCard(index)
         resultFrame.Visible = false
         avatarImage.Image = ""
         nameLabel.Text = ""
-        timerLabel.Text = "00:00"
+        timerLabel.Text = "00:00:00"
         leaveLabel.Text = "خروج: 0"
         joinLabel.Text = "دخول: 0"
     end
@@ -358,7 +406,7 @@ local function createCard(index)
 
         cardData.isRegistered = true
         textBox.TextEditable = false
-        textBox.BackgroundColor3 = Color3.fromRGB(40, 60, 40)
+        textBox.BackgroundColor3 = Color3.fromRGB(30, 60, 30)
         goButton.Text = "✓ مسجل"
         goButton.BackgroundColor3 = COLORS.registered
     end)
@@ -415,9 +463,10 @@ RunService.Heartbeat:Connect(function()
     for _, data in pairs(cards) do
         if data.isTracking then
             local elapsed = data.accumulatedTime + (os.time() - data.startTime)
-            local minutes = math.floor(elapsed / 60)
+            local hours = math.floor(elapsed / 3600)
+            local minutes = math.floor((elapsed % 3600) / 60)
             local seconds = elapsed % 60
-            data.timerLabel.Text = string.format("%02d:%02d", minutes, seconds)
+            data.timerLabel.Text = string.format("%02d:%02d:%02d", hours, minutes, seconds)
         end
     end
 end)
