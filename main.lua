@@ -1,4 +1,4 @@
-herelocal Players = game:GetService("Players")
+local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -21,6 +21,10 @@ local COLORS = {
     accent = Color3.fromRGB(0, 170, 255)
 }
 
+local isDraggingMain = false
+local originalPos = nil
+local floatTime = 0
+
 local function makeDraggable(guiObject)
     local dragging, dragInput, dragStart, startPos
     local function update(input)
@@ -34,11 +38,19 @@ local function makeDraggable(guiObject)
         if input.UserInputType == Enum.UserInputType.MouseButton1
         or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
+            if guiObject.Name == "MainFrame" then
+                isDraggingMain = true
+            end
             dragStart = input.Position
             startPos = guiObject.Position
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
+                    if guiObject.Name == "MainFrame" then
+                        isDraggingMain = false
+                        originalPos = guiObject.Position
+                        floatTime = 0
+                    end
                 end
             end)
         end
@@ -85,13 +97,14 @@ makeDraggable(toggleButton)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Parent = screenGui
-mainFrame.Size = UDim2.new(0, 360, 0, 340)
-mainFrame.Position = UDim2.new(0.5, -180, 0.5, -170)
+mainFrame.Size = UDim2.new(0, 360, 0, 360)
+mainFrame.Position = UDim2.new(0.5, -180, 0.5, -180)
 mainFrame.BackgroundColor3 = COLORS.bg
 mainFrame.BorderSizePixel = 0
 mainFrame.Visible = true
 mainFrame.Active = true
 makeDraggable(mainFrame)
+originalPos = mainFrame.Position
 
 local mainCorner = Instance.new("UICorner")
 mainCorner.CornerRadius = UDim.new(0, 10)
@@ -383,6 +396,17 @@ end
 
 toggleButton.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
+end)
+
+RunService.Heartbeat:Connect(function(dt)
+    if mainFrame.Visible and not isDraggingMain and originalPos then
+        floatTime = floatTime + dt
+        local offsetY = math.sin(floatTime * 1.8) * 5
+        mainFrame.Position = UDim2.new(
+            originalPos.X.Scale, originalPos.X.Offset,
+            originalPos.Y.Scale, originalPos.Y.Offset + offsetY
+        )
+    end
 end)
 
 Players.PlayerRemoving:Connect(function(player)
