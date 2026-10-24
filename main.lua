@@ -10,6 +10,122 @@ local Gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 Gui.Name = "M1Tracker"
 Gui.ResetOnSpawn = false
 
+-- === [GUI الإشعارات - أسود صغير تحت الزر] ===
+local NotifGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
+NotifGui.Name = "M1Tracker_Notifs"
+NotifGui.ResetOnSpawn = false
+NotifGui.DisplayOrder = 999
+
+local NotifContainer = Instance.new("Frame", NotifGui)
+NotifContainer.Size = UDim2.new(0, 180, 0, 0)
+NotifContainer.Position = UDim2.new(1, -20, 0, 75)  -- تحت الزر
+NotifContainer.AnchorPoint = UDim2.new(1, 0, 0, 0)   -- محاذاة يمين
+NotifContainer.BackgroundTransparency = 1
+NotifContainer.AutomaticSize = Enum.AutomaticSize.Y
+
+local NotifLayout = Instance.new("UIListLayout", NotifContainer)
+NotifLayout.Padding = UDim.new(0, 6)
+NotifLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local notifOrder = 0
+
+local function showNotification(playerName, kind)
+	notifOrder += 1
+
+	local isJoin = (kind == "join")
+	local txtColor    = isJoin and Color3.fromRGB(0, 255, 100) or Color3.fromRGB(255, 60, 60)
+	local strokeColor = isJoin and Color3.fromRGB(0, 180, 60)  or Color3.fromRGB(200, 40, 40)
+
+	local notif = Instance.new("TextButton")
+	notif.Size = UDim2.new(0, 180, 0, 62)
+	notif.LayoutOrder = -notifOrder          -- الأحدث فوق
+	notif.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	notif.BackgroundTransparency = 0.15
+	notif.Text = ""
+	notif.AutoButtonColor = false
+	notif.BorderSizePixel = 0
+	notif.ClipsDescendants = true
+	notif.Parent = NotifContainer
+
+	Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 8)
+
+	local stroke = Instance.new("UIStroke", notif)
+	stroke.Color = strokeColor
+	stroke.Thickness = 1.5
+	stroke.Transparency = 0.3
+
+	-- السطر العربي
+	local arLine = Instance.new("TextLabel", notif)
+	arLine.Size = UDim2.new(1, -12, 0, 20)
+	arLine.Position = UDim2.new(0, 6, 0, 4)
+	arLine.BackgroundTransparency = 1
+	arLine.Font = Enum.Font.GothamBold
+	arLine.TextSize = 15
+	arLine.TextColor3 = txtColor
+	arLine.TextXAlignment = Enum.TextXAlignment.Center
+	arLine.Text = isJoin and "اللاعب رجع🟢" or "اللاعب هرب🔴"
+
+	-- السطر الإنجليزي
+	local enLine = Instance.new("TextLabel", notif)
+	enLine.Size = UDim2.new(1, -12, 0, 18)
+	enLine.Position = UDim2.new(0, 6, 0, 24)
+	enLine.BackgroundTransparency = 1
+	enLine.Font = Enum.Font.GothamBold
+	enLine.TextSize = 12
+	enLine.TextColor3 = txtColor
+	enLine.TextXAlignment = Enum.TextXAlignment.Center
+	enLine.Text = isJoin and "The player returned🟢" or "The player ran away🔴"
+
+	-- اسم اللاعب (أبيض صغير)
+	local nameLine = Instance.new("TextLabel", notif)
+	nameLine.Size = UDim2.new(1, -12, 0, 14)
+	nameLine.Position = UDim2.new(0, 6, 0, 45)
+	nameLine.BackgroundTransparency = 1
+	nameLine.Font = Enum.Font.Gotham
+	nameLine.TextSize = 11
+	nameLine.TextColor3 = Color3.fromRGB(210, 210, 210)
+	nameLine.TextXAlignment = Enum.TextXAlignment.Center
+	nameLine.TextTruncate = Enum.TextTruncate.AtEnd
+	nameLine.Text = playerName
+
+	-- أنيميشن ظهور
+	notif.BackgroundTransparency = 1
+	arLine.TextTransparency = 1
+	enLine.TextTransparency = 1
+	nameLine.TextTransparency = 1
+	stroke.Transparency = 1
+	TweenService:Create(notif,    TweenInfo.new(0.3), {BackgroundTransparency = 0.15}):Play()
+	TweenService:Create(arLine,   TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+	TweenService:Create(enLine,   TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+	TweenService:Create(nameLine, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+	TweenService:Create(stroke,   TweenInfo.new(0.3), {Transparency = 0.3}):Play()
+
+	-- إغلاق بالضغط (ماوس أو لمس)
+	local closed = false
+	local function closeNotif()
+		if closed then return end
+		closed = true
+		TweenService:Create(notif,    TweenInfo.new(0.25), {BackgroundTransparency = 1}):Play()
+		TweenService:Create(arLine,   TweenInfo.new(0.25), {TextTransparency = 1}):Play()
+		TweenService:Create(enLine,   TweenInfo.new(0.25), {TextTransparency = 1}):Play()
+		TweenService:Create(nameLine, TweenInfo.new(0.25), {TextTransparency = 1}):Play()
+		local st = TweenService:Create(stroke, TweenInfo.new(0.25), {Transparency = 1})
+		st:Play()
+		st.Completed:Connect(function()
+			notif:Destroy()
+		end)
+	end
+
+	notif.Activated:Connect(closeNotif)
+	notif.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseButton1 then
+			closeNotif()
+		end
+	end)
+end
+-- === [نهاية GUI الإشعارات] ===
+
 -- المهم الي يحسب السكربت تزوير وا يشكك فا فكسمك يا ابن الكحبه
 local Button = Instance.new("TextButton", Gui)
 Button.Size = UDim2.new(0,140,0,45)
@@ -204,13 +320,21 @@ Players.PlayerAdded:Connect(function(pl)
 		AllPlayersStats[pl.UserId]={JoinCount=0,LeaveCount=0,Time=0}
 	end
 	AllPlayersStats[pl.UserId].JoinCount+=1
+
+	local isTracked = false
 	for i=1,4 do
 		local pdata=PlayersData[i]
 		if pdata.currentPlayer and pdata.currentPlayer.UserId==pl.UserId then
 			pdata.JoinLabel.Text="✅ رجع: "..AllPlayersStats[pl.UserId].JoinCount
 			pdata.Running=true
 			pdata.Time=AllPlayersStats[pl.UserId].Time
+			pdata.currentPlayer = pl
+			isTracked = true
 		end
+	end
+
+	if isTracked then
+		showNotification(pl.Name, "join")
 	end
 end)
 
@@ -220,13 +344,20 @@ Players.PlayerRemoving:Connect(function(pl)
 		AllPlayersStats[pl.UserId]={JoinCount=0,LeaveCount=0,Time=0}
 	end
 	AllPlayersStats[pl.UserId].LeaveCount+=1
+
+	local isTracked = false
 	for i=1,4 do
 		local pdata=PlayersData[i]
 		if pdata.currentPlayer and pdata.currentPlayer.UserId==pl.UserId then
 			pdata.LeaveLabel.Text="❌ هرب: "..AllPlayersStats[pl.UserId].LeaveCount
 			pdata.Running=false
 			AllPlayersStats[pl.UserId].Time=pdata.Time
+			isTracked = true
 		end
+	end
+
+	if isTracked then
+		showNotification(pl.Name, "leave")
 	end
 end)
 
